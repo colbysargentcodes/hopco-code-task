@@ -9,13 +9,6 @@ const password = ref('')
 const router = useRouter()
 const userStore = useUserStore()
 
-// const emailRules = [
-//   (v: string) => !!v || 'E-mail is required',
-//   (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-// ]
-
-// const passwordRules = [(v: string) => !!v || 'Password is required']
-
 const rules = {
   email: [
     (v: string) => !!v || 'E-mail is required',
