@@ -1,7 +1,15 @@
 import { createVuetify } from 'vuetify'
+import { VDateInput } from 'vuetify/labs/VDateInput'
+import '@testing-library/jest-dom'
 
 // Provide Vuetify plugin globally for all tests
-export const globalPlugins = [createVuetify()]
+export const globalPlugins = [
+  createVuetify({
+    components: {
+      VDateInput,
+    },
+  }),
+]
 
 // Mock ResizeObserver globally
 if (!globalThis.ResizeObserver) {

@@ -12,7 +12,6 @@ export const useUserStore = defineStore('user', () => {
   const user = ref<User | null>(null)
 
   const hospitalId = computed(() => user.value?.hospital.id || 0)
-
   const inventoryHeadersConfig = computed(
     () => user.value?.hospital.config.inventoryHeaders || defaultInventoryHeadersConfig,
   )

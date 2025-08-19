@@ -31,9 +31,15 @@ const rules = {
   productName: [(v: string) => !!v || 'Product name is required'],
   manufacturer: [(v: string) => !!v || 'Manufacturer is required'],
   category: [(v: string) => !!v || 'Category is required'],
-  quantity: [(v: number) => v >= 0 || 'Quantity must be a number greater than or equal to 0'],
+  quantity: [
+    (v: number) => !!v || 'Quantity is required',
+    (v: number) => v >= 0 || 'Quantity must be a number greater than or equal to 0',
+  ],
   expiryDate: [(v: string) => !!v || 'Expiry date is required'],
-  unitPrice: [(v: number) => v >= 0 || 'Unit price must be a number greater than or equal to 0'],
+  unitPrice: [
+    (v: number) => !!v || 'Unit price is required',
+    (v: number) => v >= 0 || 'Unit price must be a number greater than or equal to 0',
+  ],
 }
 
 watch(
@@ -55,9 +61,12 @@ watch(
 )
 
 const form = ref<HTMLFormElement | null>(null)
+const formIsValid = ref(false)
 
-function saveItem() {
-  if (form.value && form.value.validate()) {
+const saveItem = async () => {
+  await form.value?.validate()
+
+  if (formIsValid.value) {
     const validatedItemData = item.value
     validatedItemData.expiryDate = new Date(validatedItemData.expiryDate as string)
       .toISOString()
@@ -84,7 +93,12 @@ function saveItem() {
 <template>
   <v-dialog v-model="dialogIsOpen" max-width="500px" persistent color="white">
     <v-sheet>
-      <v-form ref="form" lazy-validation @submit.prevent="saveItem">
+      <v-form
+        v-model="formIsValid"
+        ref="form"
+        validate-on="invalid-input"
+        @submit.prevent="saveItem"
+      >
         <v-container>
           <v-row>
             <v-col cols="12">
@@ -97,6 +111,7 @@ function saveItem() {
               <v-text-field
                 v-model="item.productName"
                 :rules="rules.productName"
+                name="product-name"
                 label="Product Name"
                 required
                 variant="outlined"
@@ -105,6 +120,7 @@ function saveItem() {
               <v-text-field
                 v-model="item.manufacturer"
                 :rules="rules.manufacturer"
+                name="manufacturer"
                 label="Manufacturer"
                 required
                 variant="outlined"
@@ -113,6 +129,7 @@ function saveItem() {
               <v-text-field
                 v-model="item.category"
                 :rules="rules.category"
+                name="category"
                 label="Category"
                 required
                 variant="outlined"
@@ -121,6 +138,7 @@ function saveItem() {
               <v-number-input
                 v-model="item.quantity"
                 :rules="rules.quantity"
+                name="quantity"
                 label="Quantity"
                 required
                 :min="0"
@@ -131,6 +149,7 @@ function saveItem() {
               <v-date-input
                 v-model="item.expiryDate"
                 :rules="rules.expiryDate"
+                name="expiry-date"
                 label="Expiry Date"
                 required
                 variant="outlined"
@@ -142,6 +161,7 @@ function saveItem() {
               <v-number-input
                 v-model="item.unitPrice"
                 :rules="rules.unitPrice"
+                name="unit-price"
                 label="Unit Price"
                 required
                 :precision="2"

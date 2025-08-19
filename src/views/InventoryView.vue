@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import type { DataTableHeader } from 'vuetify'
 import { useUserStore } from '@/stores/user'
 import { headersService } from '@/services/headersService'
 import { inventoryApiService } from '@/services/inventoryApiService'
 import { Inventory } from '@/models/Inventory'
 import { InventoryItem } from '@/models/InventoryItem'
 import InventoryItemFormDialog from '@/components/InventoryItemFormDialog.vue'
-import type { DataTableHeader } from 'vuetify'
 
 const userStore = useUserStore()
 
@@ -137,7 +137,13 @@ function deleteItem(item: InventoryItem) {
       </v-col>
 
       <v-col cols="4" class="text-right">
-        <v-btn color="success" variant="flat" @click="openAddItemDialog">Add Item</v-btn>
+        <v-btn
+          color="success"
+          variant="flat"
+          @click="openAddItemDialog"
+          data-testid="add-item-button"
+          >Add Item</v-btn
+        >
       </v-col>
 
       <v-col cols="12">
@@ -168,11 +174,23 @@ function deleteItem(item: InventoryItem) {
           </template>
 
           <template #item.actions="{ item }">
-            <v-btn icon variant="flat" size="small" @click="openEditItemDialog(item)">
+            <v-btn
+              icon
+              variant="flat"
+              size="small"
+              @click="openEditItemDialog(item)"
+              data-testid="edit-item-button"
+            >
               <v-icon icon="mdi-pencil" />
             </v-btn>
 
-            <v-btn icon variant="flat" size="small" @click="openDeleteItemDialog(item)">
+            <v-btn
+              icon
+              variant="flat"
+              size="small"
+              @click="openDeleteItemDialog(item)"
+              data-testid="delete-item-button"
+            >
               <v-icon icon="mdi-delete" />
             </v-btn>
           </template>
@@ -189,7 +207,7 @@ function deleteItem(item: InventoryItem) {
     @updatedItem="onUpdatedItem"
   />
 
-  <v-dialog v-model="isDeleteDialogOpen" max-width="500px">
+  <v-dialog v-model="isDeleteDialogOpen" max-width="500px" data-testid="delete-item-dialog">
     <v-sheet>
       <v-container>
         <v-row>
@@ -201,7 +219,7 @@ function deleteItem(item: InventoryItem) {
 
         <v-row>
           <v-col cols="6">
-            <v-btn @click="isDeleteDialogOpen = false" variant="outlined">Cancel</v-btn>
+            <v-btn variant="outlined" @click="isDeleteDialogOpen = false">Cancel</v-btn>
           </v-col>
 
           <v-col cols="6" class="text-right">

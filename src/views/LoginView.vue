@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { userApiService } from '@/services/userApiService'
 import { useUserStore } from '@/stores/user'
+import { userApiService } from '@/services/userApiService'
 
+const form = ref<HTMLFormElement | null>(null)
+const formIsValid = ref(false)
 const email = ref('')
 const password = ref('')
 const router = useRouter()
@@ -18,10 +20,11 @@ const rules = {
 }
 
 const login = async () => {
-  if (email.value && password.value) {
+  await form.value?.validate()
+
+  if (formIsValid.value) {
     try {
       const user = await userApiService.login(email.value, password.value)
-
       userStore.setUser(user)
       router.push('/hospital')
     } catch (err) {
@@ -36,7 +39,7 @@ const login = async () => {
 </script>
 
 <template>
-  <v-form lazy-validation @submit.prevent="login">
+  <v-form v-model="formIsValid" ref="form" validate-on="invalid-input" @submit.prevent="login">
     <v-container>
       <v-row>
         <v-col cols="12"><h3>Login</h3></v-col>

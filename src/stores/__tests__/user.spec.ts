@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import { useUserStore } from '../user'
 import type { User } from '@/types/user'
+import { useUserStore } from '../user'
 
 const mockUser: User = {
   id: 1,
@@ -43,6 +43,19 @@ describe('useUserStore', () => {
     store.clearUser()
 
     expect(store.user).toBeNull()
+  })
+
+  it('hospitalId returns default config when user is null', () => {
+    const store = useUserStore()
+
+    expect(store.hospitalId).toEqual(0)
+  })
+
+  it('hospitalId returns expected ID when user is set', () => {
+    const store = useUserStore()
+    store.setUser(mockUser)
+
+    expect(store.hospitalId).toEqual(mockUser.hospital.id)
   })
 
   it('inventoryHeadersConfig returns default config when user is null', () => {

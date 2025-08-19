@@ -36,4 +36,23 @@
 //   }
 // }
 
+Cypress.Commands.add('login', (email: string, password: string) => {
+  cy.visit('/')
+  cy.get('input[name="email"], input[type="email"]').type(email)
+  cy.get('input[name="password"], input[type="password"]').type(password)
+  cy.get('button[type="submit"], button').contains(/login/i).click()
+  cy.url().should('eq', Cypress.config('baseUrl') + '/hospital/inventory')
+  cy.contains('h1', /inventory management/i)
+})
+
+/* eslint-disable @typescript-eslint/no-namespace */
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      login(email: string, password: string): Chainable<void>
+    }
+  }
+}
+/* eslint-enable @typescript-eslint/no-namespace */
+
 export {}
